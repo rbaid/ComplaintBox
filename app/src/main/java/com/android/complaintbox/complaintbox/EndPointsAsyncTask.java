@@ -23,12 +23,16 @@ class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, String> 
     @Override
     protected String doInBackground(Pair<Context, String>... params) {
         if(myApiService == null) {  // Only do this once
-            MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(),
+
+            MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
+                    .setRootUrl("https://black-dragon-00000.appspot.com/_ah/api/");
+
+            /*MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(),
                     new AndroidJsonFactory(), null)
                     // options for running against local devappserver
                     // - 10.0.2.2 is localhost's IP address in Android emulator
                     // - turn off compression when running against local devappserver
-                    .setRootUrl("http://192.168.1.2:8080/_ah/api/")
+                    .setRootUrl("http://192.168.1.7:8080/_ah/api/")
                     .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
                         @Override
                         public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest) throws IOException {
@@ -36,7 +40,7 @@ class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, String> 
                         }
                     });
             // end options for devappserver
-
+            */
             myApiService = builder.build();
         }
 

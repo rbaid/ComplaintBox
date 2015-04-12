@@ -13,4 +13,11 @@
         android:layout_height="wrap_content"
         android:text="Sign in" />
 
+    <Button
+        android:id="@+id/sign_out_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="50dp"
+        android:text="Sign Out" />
+
 </RelativeLayout>
