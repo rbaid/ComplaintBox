@@ -48,7 +48,7 @@ public class SignInActivity extends ActionBarActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
-        new EndpointsAsyncTask().execute(new Pair<Context, String>(this, "Manfred"));
+        //new EndpointsAsyncTask().execute(new Pair<Context, String>(this, "Manfred"));
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -116,10 +116,11 @@ public class SignInActivity extends ActionBarActivity implements
         // We've resolved any connection errors.  mGoogleApiClient can be used to
         // access Google APIs on behalf of the user.
         mSignInClicked = false;
+
         //Toast.makeText(this, "You are connected!", Toast.LENGTH_LONG).show();
           /* This Line is the key */
-        Plus.PeopleApi.loadVisible(mGoogleApiClient, null).setResultCallback(this);
-
+       Plus.PeopleApi.loadVisible(mGoogleApiClient, null).setResultCallback(this);
+//        Log.i("SignIn",Plus.PeopleApi.getCurrentPerson(mGoogleApiClient).toString());
         String personName="You are devil";
         if (Plus.PeopleApi.getCurrentPerson(mGoogleApiClient) != null) {
             Person currentPerson = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
@@ -130,6 +131,10 @@ public class SignInActivity extends ActionBarActivity implements
             Log.i("SignIn","inside onConnected");
             Toast.makeText(this, personName, Toast.LENGTH_LONG).show();
         }
+        else {
+            Toast.makeText(this, "Meh...", Toast.LENGTH_LONG).show();
+        }
+
         new EndpointsAsyncTask().execute(new Pair<Context, String>(this, personName));
     }
 
@@ -178,6 +183,8 @@ public class SignInActivity extends ActionBarActivity implements
 
     @Override
     public void onResult(People.LoadPeopleResult loadPeopleResult) {
-
+        int code = loadPeopleResult.getStatus().getStatusCode();
+        String msg = loadPeopleResult.getStatus().getStatusMessage();
+        Log.e("SignIn","Code: "+code + " Message: " + msg );
     }
 }
