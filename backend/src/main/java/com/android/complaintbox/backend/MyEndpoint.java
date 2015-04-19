@@ -25,7 +25,20 @@ public class MyEndpoint {
     @ApiMethod(name = "sayHi",httpMethod = "post", path="saveResponse")
     public MyBean sayHi(@Named("name") String name) {
         MyBean response = new MyBean();
-        response.setData("Hi, " + name);
+         response.setData("Hi, " + name);
+
+        return response;
+    }
+
+
+    /**
+     * A simple endpoint method that takes a name and says Hi back
+     */
+    @ApiMethod(name = "authenticateUser",httpMethod = "post", path="authenticate")
+    public MyBean authenticateUser(@Named("param1") String clientId,@Named("param2") String audience) {
+        MyBean response = new MyBean();
+         Checker obj = new Checker(clientId,audience);
+         response.setData("Check, " + clientId + " " + audience);
 
         return response;
     }

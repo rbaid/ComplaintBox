@@ -1,8 +1,10 @@
 package com.android.complaintbox.complaintbox;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -12,6 +14,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.GoogleAuthException;
+import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.auth.GooglePlayServicesAvailabilityException;
+import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
@@ -19,6 +25,8 @@ import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.plus.People;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
+
+import java.io.IOException;
 
 
 public class SignInActivity extends ActionBarActivity implements
@@ -42,6 +50,9 @@ public class SignInActivity extends ActionBarActivity implements
      * True if we are in the process of resolving a ConnectionResult
      */
     private boolean mIntentInProgress;
+    private static final String SCOPE =
+            "audience:server:client_id:680350193476-8q6j6h31pu9kh1cbb1vmbh17tef1mlap.apps.googleusercontent.com";
+           // "oauth2:https://www.googleapis.com/auth/userinfo.profile";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,17 +69,7 @@ public class SignInActivity extends ActionBarActivity implements
                 .build();
 
         findViewById(R.id.sign_in_button).setOnClickListener(this);
-        findViewById(R.id.sign_out_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                   if (!mGoogleApiClient.isConnected()) {
-                        mGoogleApiClient.clearDefaultAccountAndReconnect();
-                       Log.i("SignIn","inside Sign Out");
-                    }
-            }
-        });
-
-    }
+     }
 
     @Override
     protected void onStart() {
@@ -117,25 +118,27 @@ public class SignInActivity extends ActionBarActivity implements
         // access Google APIs on behalf of the user.
         mSignInClicked = false;
 
-        //Toast.makeText(this, "You are connected!", Toast.LENGTH_LONG).show();
           /* This Line is the key */
        Plus.PeopleApi.loadVisible(mGoogleApiClient, null).setResultCallback(this);
-//        Log.i("SignIn",Plus.PeopleApi.getCurrentPerson(mGoogleApiClient).toString());
-        String personName="You are devil";
+
+        String personName="Devil";
+        String email=" ";
         if (Plus.PeopleApi.getCurrentPerson(mGoogleApiClient) != null) {
             Person currentPerson = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
             personName = currentPerson.getDisplayName();
             //String personPhoto = currentPerson.getImage();
             String personGooglePlusProfile = currentPerson.getUrl();
-            String email = Plus.AccountApi.getAccountName(mGoogleApiClient);
+            email = Plus.AccountApi.getAccountName(mGoogleApiClient);
             Log.i("SignIn","inside onConnected");
-            Toast.makeText(this, personName, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "onConnected: " + personName, Toast.LENGTH_LONG).show();
         }
         else {
             Toast.makeText(this, "Meh...", Toast.LENGTH_LONG).show();
         }
 
-        new EndpointsAsyncTask().execute(new Pair<Context, String>(this, personName));
+        new EndpointsAsyncTask().execute(new Pair<Context, String>(this, personName+" "+email));
+      //  new GetUsernameTask(SignInActivity.this,email,SCOPE).execute();
+
     }
 
     @Override

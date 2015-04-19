@@ -2,10 +2,13 @@ package com.android.complaintbox.complaintbox;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.util.Pair;
 import android.widget.Toast;
 
 import com.android.complaintbox.backend.myApi.MyApi;
+
+
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
@@ -26,7 +29,7 @@ class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, String> 
 
             MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
                     .setRootUrl("https://black-dragon-00000.appspot.com/_ah/api/");
-
+            Log.i("EndPoint","inside doInBackground");
             /*MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(),
                     new AndroidJsonFactory(), null)
                     // options for running against local devappserver
@@ -48,6 +51,10 @@ class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, String> 
         String name = params[0].second;
 
         try {
+            String clientId = "client";
+            String audience = "audience";
+           String res =   myApiService.authenticateUser(clientId,audience).execute().getData();
+           // Log.i("EndPoint",res);
             return myApiService.sayHi(name).execute().getData();
         } catch (IOException e) {
             return e.getMessage();
